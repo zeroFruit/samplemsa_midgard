@@ -11,14 +11,19 @@ import java.util.List;
 @Document(collection="rwset")
 @NoArgsConstructor
 @ToString
-public class ReadWriteSet {
+@Getter
+@Setter
+public class EntityWithIdAndEventList {
     @Id
-    @Getter(AccessLevel.PUBLIC)
     private String id;
-    @Getter(AccessLevel.PUBLIC)
+
     private List<Event> eventList = new ArrayList<>();
 
     public void addEvent(Event event) {
         this.eventList.add(event);
+    }
+
+    public void appendEventList(List<Event> eventList) {
+        this.eventList.addAll(eventList);
     }
 }

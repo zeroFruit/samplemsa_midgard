@@ -5,6 +5,6 @@ import com.itchain.midgard.common.Event;
 import java.util.List;
 
 public interface EventStore{
-    ReadWriteSet save(String aggregateID, Event event);
-    ReadWriteSet load(String aggregateID);
+    EntityWithIdAndEventList save(String aggregateID, List<Event> event);
+    EntityWithIdAndEventList load(String aggregateID);
 }

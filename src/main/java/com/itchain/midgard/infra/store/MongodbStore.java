@@ -1,12 +1,10 @@
 package com.itchain.midgard.infra.store;
 
-import com.itchain.midgard.common.Aggregate;
 import com.itchain.midgard.common.Event;
 import com.itchain.midgard.domain.EventStore;
 import com.itchain.midgard.domain.MongoClient;
-import com.itchain.midgard.domain.ReadWriteSet;
+import com.itchain.midgard.domain.EntityWithIdAndEventList;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,20 +18,20 @@ public class MongodbStore implements EventStore {
     MongoClient client;
 
     @Override
-    public ReadWriteSet save(String aggregateID, Event event) {
-        ReadWriteSet set = load(aggregateID);
-        if (set == null) {
-            set = new ReadWriteSet();
+    public EntityWithIdAndEventList save(String aggregateID, List<Event> eventList) {
+        EntityWithIdAndEventList entity = load(aggregateID);
+        if (entity == null) {
+            entity = new EntityWithIdAndEventList();
         }
 
-        set.addEvent(event);
+        entity.appendEventList(eventList);
 
-        return client.save(set);
+        return client.save(entity);
     }
 
     @Override
-    public ReadWriteSet load(String aggregateID) {
-        Optional<ReadWriteSet> option = client.findById(aggregateID);
+    public EntityWithIdAndEventList load(String aggregateID) {
+        Optional<EntityWithIdAndEventList> option = client.findById(aggregateID);
         if (!option.isPresent()) {
             return null;
         }
